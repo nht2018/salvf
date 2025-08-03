@@ -62,7 +62,7 @@ output_dim = 10                #
 
 
 N_exp = 10
-num_epochs = 50
+num_epochs = 100
 
 all_history = {
     'loss_outer': np.zeros((N_exp, num_epochs)),
@@ -265,11 +265,9 @@ for e in range(N_exp):
                     dz += (1-beta) * (dz_last - z.grad)
 
 
-            # print("C.grad: ", C.grad)
             with torch.no_grad():
                 model_outer_last.load_state_dict(model_outer.state_dict())
                 for name, param in model_outer.named_parameters():
-                    # print(name, dparam[name].shape)
                     param -= alpha * dparam[name]
                     dparam_last[name] = dparam[name]
                 C_last = C.clone().requires_grad_(False)
@@ -322,18 +320,18 @@ for e in range(N_exp):
 
 
 
-        # print(f"Epoch [{epoch+1}/{num_epochs}], "
-        #     f"model_outer: "
-        #         f"Loss: {loss_outer.item():.4f}, "
-        #         f"Train Acc: {train_accuracy.item():.4f}, "
-        #         f"Val Acc: {val_accuracy.item():.4f}, "
-        #         f"Test Acc: {test_accuracy.item():.4f}\n"
-        #         f"model_inner: "
-        #         f"Loss: {loss_inner.item():.4f}, "
-        #         f"Train Acc: {train_accuracy_inner.item():.4f}, "
-        #         f"Val Acc: {val_accuracy_inner.item():.4f}, "
-        #         f"Test Acc: {test_accuracy_inner.item():.4f}"
-        #         )
+        print(f"Epoch [{epoch+1}/{num_epochs}], "
+            f"model_outer: "
+                f"Loss: {loss_outer.item():.4f}, "
+                f"Train Acc: {train_accuracy.item():.4f}, "
+                f"Val Acc: {val_accuracy.item():.4f}, "
+                f"Test Acc: {test_accuracy.item():.4f}\n"
+                f"model_inner: "
+                f"Loss: {loss_inner.item():.4f}, "
+                f"Train Acc: {train_accuracy_inner.item():.4f}, "
+                f"Val Acc: {val_accuracy_inner.item():.4f}, "
+                f"Test Acc: {test_accuracy_inner.item():.4f}"
+                )
 
 
         # save the history of the training process
@@ -347,7 +345,6 @@ for e in range(N_exp):
         history['test_acc_inner'].append(test_accuracy_inner.item())
         history['time'].append(time.time()-t0)
 
-    print("C: ", C.item())
 
     all_history['loss_outer'][e, :] = history['loss_outer']
     all_history['train_acc_outer'][e, :] = history['train_acc_outer']

@@ -327,7 +327,6 @@ for e in range(N_exp):
         history['test_acc_inner'].append(test_accuracy_inner.item())
         history['time'].append(time.time()-t0)
 
-    print("C: ", C.item())
 
     all_history['loss_outer'][e, :] = history['loss_outer']
     all_history['train_acc_outer'][e, :] = history['train_acc_outer']
